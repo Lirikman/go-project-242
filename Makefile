@@ -1,2 +1,4 @@
-build: # сборка и запуск приветствия
+build: # сборка и запуск утилиты
 	go build -o bin/hexlet-path-size ./cmd/hexlet-path-size
+test: # запуск тестов
+	go test -v ./...
