@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/urfave/cli/v3"
 )
@@ -21,6 +22,12 @@ func main() {
 				Value:   false,
 				Usage:   "human-readable sizes (auto-select unit)",
 			},
+			&cli.BoolFlag{
+				Name:    "all",
+				Aliases: []string{"a"},
+				Value:   false,
+				Usage:   "include hidden files and directories",
+			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			n := cmd.NArg()
@@ -28,7 +35,7 @@ func main() {
 				return fmt.Errorf("path not entered, operation not possible")
 			}
 			p := cmd.Args().Get(0)
-			size, _ := GetSize(p)
+			size, _ := GetSize(p, cmd.Bool("all"))
 			fSize := FormatSize(float64(size), cmd.Bool("human"))
 			fmt.Printf("%s\t%s\n", fSize, p)
 			return nil
@@ -41,7 +48,7 @@ func main() {
 }
 
 // функция для подсчёта размера файлов в папке
-func GetSize(path string) (int64, error) {
+func GetSize(path string, all bool) (int64, error) {
 	// получаем информацию о пути
 	fileInfo, err := os.Lstat(path)
 	if err != nil {
@@ -55,17 +62,37 @@ func GetSize(path string) (int64, error) {
 		}
 		var totalSize int64
 		for _, file := range files {
-			fileInfo, _ := file.Info() // проверяем что объект это файл
+			fileInfo, _ := file.Info()
+			// проверяем что объект это файл
 			if fileInfo.IsDir() == false {
-				totalSize += fileInfo.Size()
+				// проверяем что флаг all == false
+				if all == false {
+					// проверяем что файл скрыт и пропускаем его
+					if strings.HasPrefix(fileInfo.Name(), ".") == true {
+						continue
+						// если не скрыт, то прибавляем к общему размеру
+					} else {
+						totalSize += fileInfo.Size()
+					}
+					// если флаг all == true учитываем все файлы
+				} else {
+					totalSize += fileInfo.Size()
+				}
 			}
 		}
 		return totalSize, nil
 	}
 
 	// иначе, путь это файл
-	size := fileInfo.Size()
-	return size, nil
+	// проверяем что флаг all == false
+	if all == false {
+		// проверяем что файл скрытый и возвращаем нулевой размер
+		if strings.HasPrefix(fileInfo.Name(), ".") == true {
+			return 0, nil
+		}
+	}
+	// если флаг all == true возвращаем размер любого файла
+	return fileInfo.Size(), nil
 }
 
 // функция конвертирования размера в человекочитаемый формат
