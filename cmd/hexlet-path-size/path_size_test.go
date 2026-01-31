@@ -9,7 +9,7 @@ import (
 func TestGetSizeEmptyFolder(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/EmptyFolder"
 	expected := int64(0)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -17,7 +17,7 @@ func TestGetSizeEmptyFolder(t *testing.T) {
 func TestGetSizeAudioFile(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/audio_file.mp3"
 	expected := int64(9327847)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -25,7 +25,7 @@ func TestGetSizeAudioFile(t *testing.T) {
 func TestGetSizeOneFileInFolder(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/FilesFolder"
 	expected := int64(27761)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -33,15 +33,30 @@ func TestGetSizeOneFileInFolder(t *testing.T) {
 func TestGetSizeTextFile(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/linux.txt"
 	expected := int64(2095)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
-func TestGetSizeFilesAndFolders(t *testing.T) {
+func TestGetSizeFilesAndFoldersNoRecursive(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata"
 	expected := int64(9342567)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, false)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
+func TestGetSizeFilesAndFoldersNoHiddenAndRecursive(t *testing.T) {
+	path := "/home/dmitriy/go-project-242/testdata"
+	expected := int64(12057443)
+	actual, err := GetSize(path, false, true)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
+
+func TestGetSizeFilesAndFoldersHiddenAndRecursive(t *testing.T) {
+	path := "/home/dmitriy/go-project-242/testdata"
+	expected := int64(14001107)
+	actual, err := GetSize(path, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -49,23 +64,23 @@ func TestGetSizeFilesAndFolders(t *testing.T) {
 func TestGetSizeHiddenFile(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/HiddenFiles/.go1.2.txt"
 	expected := int64(1943664)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
-func TestGetSizeFilesExceptHiddens(t *testing.T) {
+func TestGetSizeFilesExceptHiddensNoRecursive(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/HiddenFiles"
 	expected := int64(2687115)
-	actual, err := GetSize(path, false)
+	actual, err := GetSize(path, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
-func TestGetSizeAllFiles(t *testing.T) {
+func TestGetSizeAllFilesNoRecursive(t *testing.T) {
 	path := "/home/dmitriy/go-project-242/testdata/HiddenFiles"
 	expected := int64(4630779)
-	actual, err := GetSize(path, true)
+	actual, err := GetSize(path, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
