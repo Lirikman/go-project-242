@@ -71,7 +71,7 @@ func GetSize(path string, all bool, recursive bool) (int64, error) {
 			// получаем список файлов и папок указанной папки
 			files, err := os.ReadDir(path)
 			if err != nil {
-				return 0, fmt.Errorf("Error: %w", err)
+				return 0, fmt.Errorf("error: %w", err)
 			}
 			// получаем размер всех файлов
 			for _, file := range files {
@@ -99,7 +99,7 @@ func GetSize(path string, all bool, recursive bool) (int64, error) {
 			// получаем размер файлов во всех вложенных папках
 			err := filepath.Walk(path, func(path string, info fs.FileInfo, err error) error {
 				if err != nil {
-					return fmt.Errorf("Error: %w", err)
+					return fmt.Errorf("error: %w", err)
 				}
 				// проверяем, что объект это файл
 				if !info.IsDir() {
@@ -118,7 +118,7 @@ func GetSize(path string, all bool, recursive bool) (int64, error) {
 				return nil
 			})
 			if err != nil {
-				return 0, fmt.Errorf("Error: %w", err)
+				return 0, fmt.Errorf("error: %w", err)
 			}
 			return totalSize, nil
 		}
