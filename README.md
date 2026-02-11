@@ -9,9 +9,13 @@ Print size of a file or directory
 USAGE: hexlet-path-size [global options]
 
 GLOBAL OPTIONS:
+   
    --recursive, -r  recursive size of directories (default: false)
+   
    --human, -H      human-readable sizes (auto-select unit) (default: false)
+   
    --all, -a        include hidden files and directories (default: false)
+   
    --help, -h       show help
 
 ### Requirements
