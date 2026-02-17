@@ -42,7 +42,7 @@ func GetPathSize(path string, human, all, recursive bool) (string, error) {
 			}
 			return FormatSize(totalSize, human), nil
 			// если флаг recursive == true
-		} else {
+		} else if recursive {
 			// получаем размер файлов во всех вложенных папках
 			err := filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
 				if err != nil {
@@ -85,11 +85,11 @@ func FormatSize(size int64, human bool) string {
 	case size < 1000:
 		msg_size = fmt.Sprintf("%dB", size)
 	case size >= 1000 && size < 1000000:
-		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1000.0)
+		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1024.0)
 	case size >= 1000000 && size < 1000000000:
-		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1000.0/1000.0)
+		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1024.0/1024.0)
 	default:
-		msg_size = fmt.Sprintf("%.1fGB", float64(size)/1000.0/1000.0/1000.0)
+		msg_size = fmt.Sprintf("%.1fGB", float64(size)/1024.0/1024.0/1024.0)
 	}
 	return msg_size
 }
