@@ -42,19 +42,29 @@ func GetPathSize(path string, human, all, recursive bool) (string, error) {
 			}
 			return FormatSize(totalSize, human), nil
 			// если флаг recursive == true
-		} else {
+		} else if recursive {
 			// получаем размер файлов во всех вложенных папках
 			err := filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
 				if err != nil {
 					return fmt.Errorf("error: %w", err)
 				}
-				// проверяем, что объект это файл
-				if !d.IsDir() {
-					info, _ := d.Info()
-					// проверяем что флаг all == false и пропускаем скрытые файлы
-					if !all && strings.HasPrefix(info.Name(), ".") {
-						totalSize += 0
+				// проверяем что флаг all == false и игнорируем все скрытые файлы и папки
+				if !all {
+					// проверяем что объект это папка и если скрытая то игнорируем
+					if d.IsDir() && strings.HasPrefix(d.Name(), ".") {
+						return fs.SkipDir
 					} else {
+						// проверяем что объект это не скрытый файл
+						if !d.IsDir() && !strings.HasPrefix(d.Name(), ".") {
+							info, _ := d.Info()
+							totalSize += info.Size()
+						}
+					}
+					// если флаг all == true учитываем все файлы во всех папках
+				} else if all {
+					// проверяем что объект это файл
+					if !d.IsDir() {
+						info, _ := d.Info()
 						totalSize += info.Size()
 					}
 				}
@@ -82,9 +92,9 @@ func FormatSize(size int64, human bool) string {
 	}
 	var msg_size string
 	switch {
-	case size < 1000:
+	case size < 1024:
 		msg_size = fmt.Sprintf("%dB", size)
-	case size >= 1000 && size < 1000000:
+	case size >= 1024 && size < 1000000:
 		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1000.0)
 	case size >= 1000000 && size < 1000000000:
 		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1000.0/1000.0)
