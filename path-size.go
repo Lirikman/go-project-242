@@ -94,12 +94,17 @@ func FormatSize(size int64, human bool) string {
 	switch {
 	case size < 1024:
 		msg_size = fmt.Sprintf("%dB", size)
+<<<<<<< HEAD
 	case size >= 1024 && size < 1000000:
 		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1000.0)
+=======
+	case size >= 1000 && size < 1000000:
+		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1024.0)
+>>>>>>> 9501ef721b8dad7904f56024385e4c7c05e12292
 	case size >= 1000000 && size < 1000000000:
-		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1000.0/1000.0)
+		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1024.0/1024.0)
 	default:
-		msg_size = fmt.Sprintf("%.1fGB", float64(size)/1000.0/1000.0/1000.0)
+		msg_size = fmt.Sprintf("%.1fGB", float64(size)/1024.0/1024.0/1024.0)
 	}
 	return msg_size
 }
