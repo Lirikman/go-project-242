@@ -49,14 +49,14 @@ func TestGetPathSizeTextFileHuman(t *testing.T) {
 
 func TestGetPathSizeFilesAndFoldersNoHumanNoRecursive(t *testing.T) {
 	path := "./testdata"
-	expected := "9342575B"
+	expected := "9354855B"
 	actual, err := code.GetPathSize(path, false, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 func TestGetPathSizeFilesAndFoldersNoHumanNoHiddenRecursive(t *testing.T) {
 	path := "./testdata"
-	expected := "12107905B"
+	expected := "12057443B"
 	actual, err := code.GetPathSize(path, false, false, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -72,7 +72,7 @@ func TestGetPathSizeFilesAndFoldersHumanNoHiddenRecursive(t *testing.T) {
 
 func TestGetPathSizeFilesAndFoldersNoHumanHiddenRecursive(t *testing.T) {
 	path := "./testdata"
-	expected := "14084053B"
+	expected := "14001107B"
 	actual, err := code.GetPathSize(path, false, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -80,7 +80,7 @@ func TestGetPathSizeFilesAndFoldersNoHumanHiddenRecursive(t *testing.T) {
 
 func TestGetPathSizeHiddenFileNoHuman(t *testing.T) {
 	path := "./testdata/HiddenFiles/.go1.2.txt"
-	expected := "1976148B"
+	expected := "1943664B"
 	actual, err := code.GetPathSize(path, false, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -88,7 +88,7 @@ func TestGetPathSizeHiddenFileNoHuman(t *testing.T) {
 
 func TestGetPathSizeFilesExceptHiddensNoHumanNoRecursive(t *testing.T) {
 	path := "./testdata/HiddenFiles"
-	expected := "2737569B"
+	expected := "2687115B"
 	actual, err := code.GetPathSize(path, false, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -96,7 +96,7 @@ func TestGetPathSizeFilesExceptHiddensNoHumanNoRecursive(t *testing.T) {
 
 func TestGetPathSizeAllFilesNoHumanNoRecursive(t *testing.T) {
 	path := "./testdata/HiddenFiles"
-	expected := "4713717B"
+	expected := "4630779B"
 	actual, err := code.GetPathSize(path, false, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -104,7 +104,7 @@ func TestGetPathSizeAllFilesNoHumanNoRecursive(t *testing.T) {
 
 func TestGetPathSizeAllFilesHumanNoRecursive(t *testing.T) {
 	path := "./testdata/HiddenFiles"
-	expected := "4.7MB"
+	expected := "4.6MB"
 	actual, err := code.GetPathSize(path, true, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)

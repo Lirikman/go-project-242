@@ -37,11 +37,20 @@ func main() {
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
 			n := cmd.NArg()
+			// проверка на ввод аргументов функции
 			if n == 0 {
 				return fmt.Errorf("path not entered, operation not possible")
 			}
 			p := cmd.Args().Get(0)
-			size, _ := code.GetPathSize(p, cmd.Bool("human"), cmd.Bool("all"), cmd.Bool("recursive"))
+			// проверка на корректный ввод пути
+			_, err := os.Stat(p)
+			if err != nil {
+				return fmt.Errorf("invalid path entered")
+			}
+			size, err := code.GetPathSize(p, cmd.Bool("human"), cmd.Bool("all"), cmd.Bool("recursive"))
+			if err != nil {
+				return fmt.Errorf("error: %w", err)
+			}
 			fmt.Printf("%s\t%s\n", size, p)
 			return nil
 		},
