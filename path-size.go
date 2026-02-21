@@ -14,6 +14,9 @@ func GetPathSize(path string, human, all, recursive bool) (string, error) {
 	fileInfo, _ := os.Lstat(path)
 	// проверяем, что путь это директория
 	if fileInfo.IsDir() {
+		if !all && strings.HasPrefix(fileInfo.Name(), ".") {
+			return "", fmt.Errorf("the folder %s is hidden, enable the flag -a", fileInfo.Name())
+		}
 		var totalSize int64
 		// проверяем что флаг recursive == false
 		if !recursive {
@@ -40,10 +43,7 @@ func GetPathSize(path string, human, all, recursive bool) (string, error) {
 					if d.IsDir() && strings.HasPrefix(d.Name(), ".") {
 						return fs.SkipDir
 					} else {
-						// проверяем что объект это не скрытый файл
-						if !d.IsDir() {
-							totalSize += GetSize(d, all)
-						}
+						totalSize += GetSize(d, all)
 					}
 					// если флаг all == true учитываем все файлы во всех папках
 				} else if all {
@@ -72,13 +72,19 @@ func GetPathSize(path string, human, all, recursive bool) (string, error) {
 // функция для получения размера файла с учётом фильтра скрытых файлов (флаг -a)
 func GetSize(filePath os.DirEntry, all bool) int64 {
 	var fileSize int64
-	// проверяем что флаг all == false и если файл скрытый возвращаем нулевой размер
-	if !all && strings.HasPrefix(filePath.Name(), ".") {
-		fileSize = 0
-		// иначе возвращаем размер файла
-	} else {
-		info, _ := filePath.Info()
-		fileSize = info.Size()
+	// проверяем что переданный путь это файл
+	if !filePath.IsDir() {
+		// проверяем что флаг all == false и если файл скрытый возвращаем нулевой размер
+		if !all && strings.HasPrefix(filePath.Name(), ".") {
+			fileSize = 0
+			// показывет список файлов и их размер, с выбранными фильтрами (использовать для отладки)
+			//fmt.Println(filePath, fileSize)
+		} else {
+			info, _ := filePath.Info()
+			fileSize = info.Size()
+			// показывет список файлов и их размер, с выбранными фильтрами (использовать для отладки)
+			//fmt.Println(filePath, fileSize)
+		}
 	}
 	return fileSize
 }
