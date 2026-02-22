@@ -78,12 +78,12 @@ func GetSize(filePath os.DirEntry, all bool) int64 {
 		if !all && strings.HasPrefix(filePath.Name(), ".") {
 			fileSize = 0
 			// показывет список файлов и их размер, с выбранными фильтрами (использовать для отладки)
-			//fmt.Println(filePath, fileSize)
+			fmt.Println(filePath, fileSize)
 		} else {
 			info, _ := filePath.Info()
 			fileSize = info.Size()
 			// показывет список файлов и их размер, с выбранными фильтрами (использовать для отладки)
-			//fmt.Println(filePath, fileSize)
+			fmt.Println(filePath, fileSize)
 		}
 	}
 	return fileSize
@@ -96,14 +96,16 @@ func FormatSize(size int64, human bool) string {
 	}
 	var msg_size string
 	switch {
-	case size < 1000:
+	case size < 1024:
 		msg_size = fmt.Sprintf("%dB", size)
-	case size >= 1000 && size < 1000000:
-		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1000.0)
-	case size >= 1000000 && size < 1000000000:
-		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1000.0/1000.0)
+	case size >= 1024 && size < 1048576:
+		msg_size = fmt.Sprintf("%.1fKB", float64(size)/1024.0)
+	case size >= 1048576 && size < 1073741824:
+		msg_size = fmt.Sprintf("%.1fMB", float64(size)/1024.0/1024.0)
+	case size >= 1073741824 && size < 1099511627776:
+		msg_size = fmt.Sprintf("%.1fGB", float64(size)/1024.0/1024.0/1024.0)
 	default:
-		msg_size = fmt.Sprintf("%.1fGB", float64(size)/1000.0/1000.0/1000.0)
+		msg_size = fmt.Sprintf("%.1fTB", float64(size)/1024.0/1024.0/1024.0/1024.0)
 	}
 	return msg_size
 }

@@ -37,6 +37,18 @@ cd go-project-242
 make build
 ```
 
+### Run golangci-lint 
+
+```bash
+make lint
+```
+
+### Run golangci-lint and automatic correction
+
+```bash
+make lint-fix
+```
+
 ### Run tests
 
 ```bash
