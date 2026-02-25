@@ -10,7 +10,7 @@ import (
 func TestGetPathSizeEmptyFolder(t *testing.T) {
 	path := "./testdata/EmptyFolder"
 	expected := "0B"
-	actual, err := code.GetPathSize(path, false, true, true)
+	actual, err := code.GetPathSize(path, true, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -18,14 +18,14 @@ func TestGetPathSizeEmptyFolder(t *testing.T) {
 func TestGetPathSizeAudioFileNoHuman(t *testing.T) {
 	path := "./testdata/audio_file.mp3"
 	expected := "9327847B"
-	actual, err := code.GetPathSize(path, false, true, true)
+	actual, err := code.GetPathSize(path, false, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
 func TestGetPathSizeAudioFileHuman(t *testing.T) {
 	path := "./testdata/audio_file.mp3"
-	expected := "9.3MB"
+	expected := "8.9MB"
 	actual, err := code.GetPathSize(path, true, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -34,14 +34,14 @@ func TestGetPathSizeAudioFileHuman(t *testing.T) {
 func TestGetPathSizeOneFileInFolderNoHuman(t *testing.T) {
 	path := "./testdata/FilesFolder"
 	expected := "27761B"
-	actual, err := code.GetPathSize(path, false, true, true)
+	actual, err := code.GetPathSize(path, true, false, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
 func TestGetPathSizeTextFileHuman(t *testing.T) {
 	path := "./testdata/linux.txt"
-	expected := "2.1KB"
+	expected := "2.0KB"
 	actual, err := code.GetPathSize(path, true, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
@@ -49,23 +49,23 @@ func TestGetPathSizeTextFileHuman(t *testing.T) {
 
 func TestGetPathSizeFilesAndFoldersNoHumanNoRecursive(t *testing.T) {
 	path := "./testdata"
-	expected := "9354855B"
-	actual, err := code.GetPathSize(path, false, true, false)
+	expected := "9342567B"
+	actual, err := code.GetPathSize(path, false, false, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 func TestGetPathSizeFilesAndFoldersNoHumanNoHiddenRecursive(t *testing.T) {
 	path := "./testdata"
 	expected := "12057443B"
-	actual, err := code.GetPathSize(path, false, false, true)
+	actual, err := code.GetPathSize(path, true, false, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
 func TestGetPathSizeFilesAndFoldersHumanNoHiddenRecursive(t *testing.T) {
 	path := "./testdata"
-	expected := "12.1MB"
-	actual, err := code.GetPathSize(path, true, false, true)
+	expected := "11.5MB"
+	actual, err := code.GetPathSize(path, true, true, false)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -73,7 +73,7 @@ func TestGetPathSizeFilesAndFoldersHumanNoHiddenRecursive(t *testing.T) {
 func TestGetPathSizeFilesAndFoldersNoHumanHiddenRecursive(t *testing.T) {
 	path := "./testdata"
 	expected := "14001107B"
-	actual, err := code.GetPathSize(path, false, true, true)
+	actual, err := code.GetPathSize(path, true, false, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -81,7 +81,7 @@ func TestGetPathSizeFilesAndFoldersNoHumanHiddenRecursive(t *testing.T) {
 func TestGetPathSizeHiddenFileNoHuman(t *testing.T) {
 	path := "./testdata/HiddenFiles/.go1.2.txt"
 	expected := "1943664B"
-	actual, err := code.GetPathSize(path, false, true, true)
+	actual, err := code.GetPathSize(path, true, false, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -97,15 +97,15 @@ func TestGetPathSizeFilesExceptHiddensNoHumanNoRecursive(t *testing.T) {
 func TestGetPathSizeAllFilesNoHumanNoRecursive(t *testing.T) {
 	path := "./testdata/HiddenFiles"
 	expected := "4630779B"
-	actual, err := code.GetPathSize(path, false, true, false)
+	actual, err := code.GetPathSize(path, false, false, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
 
 func TestGetPathSizeAllFilesHumanNoRecursive(t *testing.T) {
 	path := "./testdata/HiddenFiles"
-	expected := "4.6MB"
-	actual, err := code.GetPathSize(path, true, true, false)
+	expected := "4.4MB"
+	actual, err := code.GetPathSize(path, false, true, true)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, actual)
 }
@@ -132,7 +132,7 @@ func TestFormatSizeSmallHumanTrue(t *testing.T) {
 }
 
 func TestFormatSizeMediumHumanTrue(t *testing.T) {
-	size := int64(1000050000)
+	size := int64(1073741824)
 	expected := "1.0GB"
 	actual := code.FormatSize(size, true)
 	assert.Equal(t, expected, actual)

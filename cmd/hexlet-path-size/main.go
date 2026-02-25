@@ -17,6 +17,12 @@ func main() {
 		ArgsUsage: "<path>",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
+				Name:    "recursive",
+				Aliases: []string{"r"},
+				Value:   false,
+				Usage:   "recursive size of directories (default: false)",
+			},
+			&cli.BoolFlag{
 				Name:    "human",
 				Aliases: []string{"H"},
 				Value:   false,
@@ -27,12 +33,6 @@ func main() {
 				Aliases: []string{"a"},
 				Value:   false,
 				Usage:   "include hidden files and directories (default: false)",
-			},
-			&cli.BoolFlag{
-				Name:    "recursive",
-				Aliases: []string{"r"},
-				Value:   false,
-				Usage:   "recursive size of directories (default: false)",
 			},
 		},
 		Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -47,7 +47,7 @@ func main() {
 			if err != nil {
 				return fmt.Errorf("invalid path entered")
 			}
-			size, err := code.GetPathSize(p, cmd.Bool("human"), cmd.Bool("all"), cmd.Bool("recursive"))
+			size, err := code.GetPathSize(p, cmd.Bool("recursive"), cmd.Bool("human"), cmd.Bool("all"))
 			if err != nil {
 				return fmt.Errorf("error: %w", err)
 			}

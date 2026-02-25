@@ -9,7 +9,7 @@ import (
 )
 
 // функция для подсчёта размера файлов в папке с учётом всех флагов
-func GetPathSize(path string, human, all, recursive bool) (string, error) {
+func GetPathSize(path string, recursive, human, all bool) (string, error) {
 	// получаем информацию о пути
 	fileInfo, _ := os.Lstat(path)
 	// проверяем, что путь это директория
@@ -78,12 +78,12 @@ func GetSize(filePath os.DirEntry, all bool) int64 {
 		if !all && strings.HasPrefix(filePath.Name(), ".") {
 			fileSize = 0
 			// показывет список файлов и их размер, с выбранными фильтрами (использовать для отладки)
-			fmt.Println(filePath, fileSize)
+			// fmt.Println(filePath, fileSize)
 		} else {
 			info, _ := filePath.Info()
 			fileSize = info.Size()
 			// показывет список файлов и их размер, с выбранными фильтрами (использовать для отладки)
-			fmt.Println(filePath, fileSize)
+			// fmt.Println(filePath, fileSize)
 		}
 	}
 	return fileSize
